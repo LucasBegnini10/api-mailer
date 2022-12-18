@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000
 const nodemailer = require("nodemailer");
 app.use(express.json());
 
-app.listen(port, () => console.log(`API ON ==> http://localhost:${port}/`))
+app.listen(port, () => console.log(`API ON ==> PORT ====> ` + port))
 app.post('/send', main)
 
 async function main(req, res) {
