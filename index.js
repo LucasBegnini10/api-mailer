@@ -3,21 +3,18 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 const nodemailer = require("nodemailer");
+app.use(express.json());
 
-
+app.listen(port, () => console.log(`API ON ==> http://localhost:${port}/`))
 app.post('/send', main)
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-
-
 async function main(req, res) {
-    const {query} = req
+    const {body} = req
 
-    const from = query?.from
-    const subject = query?.subject
-    const text = query?.text
+    const from = body?.from
+    const subject = body?.subject
+    const text = body?.text
+    const to  = body?.to
 
     if(!from) {
         return res.status(400).send("Está faltando o campo 'from'")
@@ -28,24 +25,27 @@ async function main(req, res) {
     if(!text) {
         return res.status(400).send("Está faltando o campo 'text'")
     }
+    if(!to) {
+        return res.status(400).send("Está faltando o campo 'to'")
+    }
 
   let transporter = nodemailer.createTransport({ 
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: { 
-       user: 'begninilucas12@gmail.com', 
-       pass: 'shpftezcfppahcmd' 
+       user: process.env.USER_AUTH, 
+       pass: process.env.PASSWORD_AUTH 
      } 
     });
 
   let info = await transporter.sendMail({
-    from: from, 
-    to: "eduardodiasmelo123@gmail.com", 
-    subject: subject, 
-    text: text, 
+    from,
+    to,
+    subject, 
+    text, 
   });
 
 
-  res.status(200).json({info})
+  res.json({info})
 }
