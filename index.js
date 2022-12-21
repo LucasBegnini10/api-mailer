@@ -1,8 +1,15 @@
 
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 const nodemailer = require("nodemailer");
+const cors = require("cors");
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.listen(port, () => console.log(`API ON ==> PORT ====> ` + port))
